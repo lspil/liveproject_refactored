@@ -1,0 +1,440 @@
+{
+	"info": {
+		"_postman_id": "3efb45bd-fdfe-4de2-b679-24f9b97129fe",
+		"name": "ssia_milestone_2_unsecured",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/profile/john",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ff6a1d4-5957-430a-b9ca-d813bc039775",
+						"exec": [
+							"",
+							"pm.test(\"Expecting Status code of 200, was \"+ pm.response.code, function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							" ",
+							"",
+							"pm.test(\"Body contains string\",() => {",
+							"  pm.expect(pm.response.text()).to.include(\"john\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:7070/profile/john",
+					"host": [
+						"localhost"
+					],
+					"port": "7070",
+					"path": [
+						"profile",
+						"john"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/profile -add a new {{username} -> success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a10d32de-d559-400a-aa4f-062d221e93b4",
+						"exec": [
+							"",
+							"pm.test(\"Expecting Status code of 200, was \"+ pm.response.code, function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "df38d8df-581c-47e7-8c68-b8c22a3211fe",
+						"exec": [
+							"var uuid = require('uuid');  ",
+							"var username = uuid.v4(); ",
+							"console.log(\"saving username \"+username); ",
+							"pm.environment.set(\"username\",username)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \n  \"username\": \"{{username}}\"\n}"
+				},
+				"url": {
+					"raw": "localhost:7070/profile",
+					"host": [
+						"localhost"
+					],
+					"port": "7070",
+					"path": [
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/profile -add same  {{username} again -> fail-already-exists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e37b7500-4791-408b-96df-a34854b4bbbc",
+						"exec": [
+							"",
+							"pm.test(\"Expecting Status code of 400, was \"+ pm.response.code, function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Body contains string\",() => {",
+							"  pm.expect(pm.response.text()).to.include('This health profile already exists.');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "01fe7356-621c-491f-b30f-884f6b6b774c",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \n  \"username\": \"{{username}}\"\n}"
+				},
+				"url": {
+					"raw": "localhost:7070/profile",
+					"host": [
+						"localhost"
+					],
+					"port": "7070",
+					"path": [
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/profile/{{username}} ->success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6f27ed8c-cbd0-41a0-b073-c510076ad853",
+						"exec": [
+							"",
+							"pm.test(\"Expecting Status code of 200, was \"+ pm.response.code, function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							" ",
+							"",
+							"pm.test(\"Body contains string\",() => {",
+							"  pm.expect(pm.response.text()).to.include(pm.environment.get('username'));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "localhost:7070/profile/{{username}}",
+					"host": [
+						"localhost"
+					],
+					"port": "7070",
+					"path": [
+						"profile",
+						"{{username}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/profile/{{username}}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "37ccfbd7-a42d-4020-88e9-1c2073129ff3",
+						"exec": [
+							"",
+							"pm.test(\"Expecting Status code of 200, was \"+ pm.response.code, function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"  "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:7070/profile/{{username}}",
+					"host": [
+						"localhost"
+					],
+					"port": "7070",
+					"path": [
+						"profile",
+						"{{username}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/profile/{{username}} -fail-not-found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cb4a292d-0d26-440c-81cf-63d339d2afa4",
+						"exec": [
+							"",
+							"pm.test(\"Expecting Status code of 404, was \"+ pm.response.code, function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							" ",
+							" "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "localhost:7070/profile/{{username}}",
+					"host": [
+						"localhost"
+					],
+					"port": "7070",
+					"path": [
+						"profile",
+						"{{username}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/metric/john",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "708245e3-8703-4f6d-9cad-7f6631f82ec3",
+						"exec": [
+							"",
+							"pm.test(\"Expecting Status code of 200, was \"+ pm.response.code, function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							" ",
+							"",
+							"pm.test(\"Body contains string\",() => {",
+							"  pm.expect(pm.response.text()).to.include(\"HEART_RATE\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "localhost:7070/metric/john",
+					"host": [
+						"localhost"
+					],
+					"port": "7070",
+					"path": [
+						"metric",
+						"john"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/metric add metric as john",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f752d9a0-2fbc-4d02-9899-8ab6d7e4826d",
+						"exec": [
+							"",
+							"pm.test(\"Expecting Status code of 200, was \"+ pm.response.code, function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							" ",
+							"",
+							"pm.test(\"Body contains string\",() => {",
+							"  pm.expect(pm.response.text()).to.include(\"HEART_RATE\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"profile\": { \"username\": \"john\"},\n  \"type\": \"BLOOD_OXYGEN_LEVEL\",\n  \"value\": 99\n}"
+				},
+				"url": {
+					"raw": "localhost:7070/metric",
+					"host": [
+						"localhost"
+					],
+					"port": "7070",
+					"path": [
+						"metric"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
